@@ -18,6 +18,4 @@ This project is an api rest developer in the Java Spring Boot Framework, it is t
 - Spring Devtools
 - MySQl
 
-
-![](https://i.imgur.com/0htOHpt.png)
-
+![](https://i.imgur.com/aW8J08g.png)
