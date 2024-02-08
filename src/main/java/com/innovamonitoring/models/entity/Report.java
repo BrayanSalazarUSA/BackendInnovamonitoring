@@ -71,7 +71,7 @@ public class Report implements Serializable {
 	public Report() {
 
 	}
-
+/* */
 	public Long getId() {
 		return id;
 	}
