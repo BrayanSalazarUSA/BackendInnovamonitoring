@@ -34,21 +34,14 @@ public class Property implements Serializable {
 	@JsonIgnoreProperties({"properties"})
 	private Set<UserEntity> users = new HashSet<>();
 
-	@OneToMany(mappedBy = "property", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JsonIgnoreProperties("property")
-	private List<Camera> cameras;
+
 
 	//@JsonIgnore
 	@OneToMany(mappedBy = "property", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<Report> reports;
 
-	public List<Camera> getCameras() {
-		return cameras;
-	}
 
-	public void setCameras(List<Camera> cameras) {
-		this.cameras = cameras;
-	}
+
 
 	public Property() {
 

@@ -78,7 +78,7 @@ public class PropertyRestController {
 		actualProperty.setReports(property.getReports());
 		actualProperty.setUsers(property.getUsers());
 		actualProperty.setImg(property.getImg());
-		actualProperty.setCameras(property.getCameras());
+
 		actualProperty.setMapImg(property.getMapImg());
 		
 		propertyUpdated = propertyService.save(actualProperty);

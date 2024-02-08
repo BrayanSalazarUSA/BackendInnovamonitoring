@@ -22,7 +22,7 @@ public class InnovaApplication {
 	}
 
 	
-	//jkhjs
+	//ijbiñij
 	/*@Autowired
 	private IPropertyService service;
 	

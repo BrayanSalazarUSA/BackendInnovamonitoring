@@ -93,7 +93,7 @@ public class CameraController {
 		
 		return cameraUpdated;
 	}
-	
+		
 	@DeleteMapping("cameras/{id}")
 	public void delete(@PathVariable Long id) {
 		
