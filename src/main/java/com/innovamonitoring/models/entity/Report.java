@@ -4,28 +4,16 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import jakarta.persistence.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
-import jakarta.persistence.Column;
-
 @Entity
 @Table(name = "reports")
 public class Report implements Serializable {
+
 
 	private static final long serialVersionUID = 1L;
 
@@ -75,30 +63,51 @@ public class Report implements Serializable {
 	@Column(name = "police_first_responder_scene", length = 50)
 	private String policeFirstResponderScene;
 
-	@Column(name = "security_guards_notified", length = 45)
-	private String securityGuardsNotified;
+    @Column(name = "police_numer_case")
+    private Long policeNumerCase;
 
-	@Column(name = "security_guards_scene", length = 45)
-	private String securityGuardsScene;
+
+	@Column(name = "security_guards_notified")
+	private boolean securityGuardsNotified;
+
+	@Column(name = "security_guards_scene")
+	private boolean securityGuardsScene;
 
 	@Column(name = "emailed_report", length = 45)
 	private String emailedReport;
 
-	/*
-	@OneToMany(mappedBy = "report", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<IncidentTimeframe> incidentTimeframes;
-	*/
+	@Column(name = "incident_date")
+	@Temporal(TemporalType.DATE)
+	@DateTimeFormat(pattern = "MM-dd-yyyy")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM-dd-yyyy")
+	private Date incidentDate;
 
+	@Column(name = "incident_start_time")
+	@Temporal(TemporalType.TIMESTAMP)
+	@DateTimeFormat(pattern = "HH:mm")
+	@JsonFormat(pattern = "HH:mm")
+	private Date incidentStartTime;
 
-/*
-	public List<IncidentTimeframe> getIncidentTimeframes() {
-		return incidentTimeframes;
-	}
+	@Column (name = "incident_end_time")
+	@Temporal(TemporalType.TIMESTAMP)
+	@DateTimeFormat(pattern = "HH:mm")
+	@JsonFormat(pattern = "HH:mm")
+	private Date incidentEndTime;
 
-	public void setIncidentTimeframes(List<IncidentTimeframe> incidentTimeframes) {
-		this.incidentTimeframes = incidentTimeframes;
-	}
-*/
+	@Column(name = "cameras_functioning")
+	private boolean camerasFunctioning;
+
+	@Column(name = "list_malfunctioning_cameras", length = 45)
+	private String listMalfuncioningCameras;
+
+	@Column(name = "observed_via_cameras")
+	private boolean observerdViaCameras;
+	@Column(name = "report_details", length = 3000)
+	private String reportDetails;
+
+	@Column(name = "form_notification_client", length = 45)
+	private String formNotificationClient;
+
 
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Evidence> evidences;
@@ -205,21 +214,31 @@ public class Report implements Serializable {
 		this.policeFirstResponderScene = policeFirstResponderScene;
 	}
 
-	public String getSecurityGuardsNotified() {
+    public Long getPoliceNumerCase() {
+		return policeNumerCase;
+	}
+
+	public void setPoliceNumerCase (Long policeNumerCase){
+		this.policeNumerCase = policeNumerCase;
+	}
+
+	public boolean isSecurityGuardsNotified() {
 		return securityGuardsNotified;
 	}
 
-	public void setSecurityGuardsNotified(String securityGuardsNotified){
+
+	public void setSecurityGuardsNotified(boolean securityGuardsNotified) {
 		this.securityGuardsNotified = securityGuardsNotified;
 	}
 
-	public String getSecurityGuardsScene(){
+	public boolean isSecurityGuardsScene() {
 		return securityGuardsScene;
 	}
 
-	public void setSecurityGuardsScene(String securityGuardsScene){
+	public void setSecurityGuardsScene(boolean securityGuardsScene) {
 		this.securityGuardsScene = securityGuardsScene;
 	}
+
 
 	public String getEmailedReport(){
 		return emailedReport;
@@ -229,6 +248,61 @@ public class Report implements Serializable {
 		this.emailedReport = emailedReport;
 	}
 
+	public Date getIncidentStartTime (){
+		return incidentStartTime;
+	}
+
+	public void setIncidentStartTime(Date incidentStartTime) {
+		this.incidentStartTime = incidentStartTime;
+	}
+
+	public Date getIncidentDate() {
+		return incidentDate;
+	}
+
+	public void setIncidentDate(Date incidentDate) {
+		this.incidentDate = incidentDate;
+	}
+
+
+
+
+	public Date getIncidentEndTime() {
+		return incidentEndTime;
+	}
+
+	public void setIncidentEndTime(Date incidentEndTime) {
+		this.incidentEndTime = incidentEndTime;
+	}
+
+
+	public boolean isCamerasFunctioning() {
+		return camerasFunctioning;
+	}
+
+	public void setCamerasFunctioning(boolean camerasFunctioning) {
+		this.camerasFunctioning = camerasFunctioning;
+	}
+
+	public String getlistMalfuncioningCameras() {
+		return listMalfuncioningCameras;
+	}
+
+	public void setlistMalfuncioningCameras(String listMalfunctioningCameras) {
+		this.listMalfuncioningCameras = listMalfunctioningCameras;
+	}
+
+
+	public boolean isObserverdViaCameras() {
+		return observerdViaCameras;
+	}
+
+	public void setObserverdViaCameras(boolean observerdViaCameras) {
+		this.observerdViaCameras = observerdViaCameras;
+	}
+
+
+
 	public List<Evidence> getEvidences() {
 		return evidences;
 	}
@@ -237,6 +311,20 @@ public class Report implements Serializable {
 		this.evidences = evidences;
 	}
 
+	public String getreportDetails() {
+		return  reportDetails;
+	}
 
+	public void setreportDetails(String reportDetails){
+		this.reportDetails = reportDetails;
+	}
+
+	public  String getformNotificationClient(){
+		return formNotificationClient;
+	}
+
+	public void setformNotificationClient(String formNotificationClient){
+		this.formNotificationClient = formNotificationClient;
+	}
 
 }

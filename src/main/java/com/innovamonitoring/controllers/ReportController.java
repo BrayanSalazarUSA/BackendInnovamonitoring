@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.innovamonitoring.models.entity.Camera;
 import com.innovamonitoring.models.entity.Report;
 
 import com.innovamonitoring.models.services.IReportService;
@@ -106,10 +105,18 @@ public class ReportController {
 			actualReport.setProperty(report.getProperty());
 			actualReport.setPoliceFirstResponderNotified(report.isPoliceFirstResponderNotified());
 			actualReport.setPoliceFirstResponderScene(report.getPoliceFirstResponderScene());
-			actualReport.setSecurityGuardsNotified(report.getSecurityGuardsNotified());
-			actualReport.setPoliceFirstResponderScene(report.getSecurityGuardsScene());
+			actualReport.setPoliceNumerCase(report.getPoliceNumerCase());
+			actualReport.setSecurityGuardsNotified(report.isSecurityGuardsNotified());
+			actualReport.setSecurityGuardsScene(report.isSecurityGuardsScene());
 			actualReport.setEmailedReport(report.getEmailedReport());
-
+			actualReport.setIncidentStartTime(report.getIncidentStartTime());
+			actualReport.setIncidentDate(report.getIncidentDate());
+			actualReport.setIncidentEndTime(report.getIncidentEndTime());
+			actualReport.setCamerasFunctioning(report.isCamerasFunctioning());
+			actualReport.setlistMalfuncioningCameras(report.getlistMalfuncioningCameras());
+			actualReport.setObserverdViaCameras(report.isObserverdViaCameras());
+			actualReport.setreportDetails(report.getreportDetails());
+			actualReport.setformNotificationClient(report.getformNotificationClient());
 			reportUpdated = reportService.save(actualReport);
 
 			return new ResponseEntity<Report>(reportUpdated, HttpStatus.OK);

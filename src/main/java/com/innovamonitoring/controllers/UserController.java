@@ -18,10 +18,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.innovamonitoring.models.dao.IUserDao;
-import com.innovamonitoring.models.entity.Camera;
-import com.innovamonitoring.models.entity.Property;
-import com.innovamonitoring.models.entity.Rol;
 import com.innovamonitoring.models.entity.UserEntity;
 import com.innovamonitoring.models.services.IUserService;
 
