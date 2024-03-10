@@ -40,27 +40,23 @@ public class PropertyRestController {
 	
 	@GetMapping("/properties/{id}")
 	public ResponseEntity<?> show (@PathVariable Long id){
-		
 		Property property = null;
-		
 		Map<String, Object> response = new HashMap<>();
-		
 		try {
 			property = propertyService.findById(id);
-			
+			if (property == null) {
+				response.put("message", "The property ID: ".concat(id.toString()).concat(" does not exist in the database!"));
+				return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+			}
+			return new ResponseEntity<>(property, HttpStatus.OK);
 		} catch (DataAccessException e) {
 			response.put("message", "Error when querying the database: ");
-			response.put("error",e.getMessage().concat(e.getMostSpecificCause().getMessage()));
+			response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
+			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		
-	    if (property == null) {
-            response.put("message", "The property ID: ".concat(id.toString().concat(" does not exist in the database!")));
-            return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
-        }
-
-        return new ResponseEntity<Property>(property, HttpStatus.OK);
 	}
-	
+
+
 	@PostMapping("/properties")
 	public Property create(@RequestBody Property property) {
 		return propertyService.save(property);

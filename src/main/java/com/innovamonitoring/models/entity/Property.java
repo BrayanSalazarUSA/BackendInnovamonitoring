@@ -37,7 +37,7 @@ public class Property implements Serializable {
 
 
 	//@JsonIgnore
-	@OneToMany(mappedBy = "property", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "property", cascade = CascadeType.ALL)
 	private List<Report> reports;
 
 

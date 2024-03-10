@@ -3,6 +3,7 @@ package com.innovamonitoring.controllers;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -20,6 +21,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.innovamonitoring.models.entity.UserEntity;
 import com.innovamonitoring.models.services.IUserService;
+import com.innovamonitoring.models.dto.UserLoginDTO;
+import com.innovamonitoring.models.dto.RoleDTO;
+import com.innovamonitoring.models.dto.PropertyUserDTO;
+
 
 @CrossOrigin("*")
 @RestController
@@ -56,38 +61,43 @@ public class UserController {
 
 		return new ResponseEntity<UserEntity>(user, HttpStatus.OK);
 	}
-	
-	
+
+
+
 	@PostMapping("/users/login")
-	public ResponseEntity<?> login(@RequestBody UserEntity user ) {
-		System.out.println(user);
-		UserEntity actualUser = null;
-
+	public ResponseEntity<?> login(@RequestBody UserEntity user) {
 		Map<String, Object> response = new HashMap<>();
-
 		try {
-			actualUser = userService.findByEmail(user.getEmail());
+			UserEntity actualUser = userService.findByEmail(user.getEmail());
+			if (actualUser == null || !actualUser.getPasword().equals(user.getPasword())) {
+				response.put("message", "Incorrect email or password!");
+				return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+			}
 
+			// Suponiendo que userService puede cargar las propiedades y el rol del usuario
+			RoleDTO roleDTO = new RoleDTO(actualUser.getRol().getId(), actualUser.getRol().getRolName());
+			List<PropertyUserDTO> propertyUserDTOs = actualUser.getProperties().stream()
+					.map(property -> new PropertyUserDTO(property.getId(), property.getName(), property.getDirection(), property.getImg()))
+					.collect(Collectors.toList());
+
+			UserLoginDTO userLoginDTO = new UserLoginDTO(
+					actualUser.getEmail(),
+					actualUser.getName(),
+					actualUser.getImage(),
+					roleDTO,
+					propertyUserDTOs);
+
+			return new ResponseEntity<>(userLoginDTO, HttpStatus.OK);
 		} catch (DataAccessException e) {
 			response.put("message", "Error when querying the database: ");
-			response.put("error", e.getMessage().concat(e.getMostSpecificCause().getMessage()));
+			response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
+			return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-
-		if (actualUser == null) {
-			response.put("message", "The email: ".concat(user.getEmail().concat(" does not exist in the database!")));
-			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
-		}
-		
-		if(actualUser.getPasword().equals(user.getPasword()) == false) {
-			
-			response.put("message", "The email: ".concat(user.getEmail().concat(" The password does not match the user name, please try again.!")));
-			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
-		}
-
-		return new ResponseEntity<UserEntity>(actualUser, HttpStatus.OK);
 	}
-	
-	
+
+
+
+
 
 	@PostMapping("/users")
 	public UserEntity create(@RequestBody UserEntity user) {

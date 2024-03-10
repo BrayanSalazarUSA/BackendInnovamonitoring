@@ -8,6 +8,7 @@ import java.util.Set;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 @Entity
@@ -46,6 +47,16 @@ public class UserEntity implements Serializable {
 	@JsonIgnoreProperties({"users"})
 	private Set<Property> properties = new HashSet<>();
 
+	@OneToOne(mappedBy = "userEntity", cascade = CascadeType.ALL, optional = false)
+	@JsonManagedReference
+	private Agent agent;
+	public Agent getAgent() {
+		return agent;
+	}
+
+	public void setAgent(Agent agent) {
+		this.agent = agent;
+	}
 	public UserEntity() {
 
 	}

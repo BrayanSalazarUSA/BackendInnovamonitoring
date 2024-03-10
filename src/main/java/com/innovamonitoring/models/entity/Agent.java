@@ -2,12 +2,12 @@ package com.innovamonitoring.models.entity;
 
 import java.io.Serializable;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import jakarta.persistence.*;
+import org.apache.catalina.User;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.FetchType;
 @Entity
 @Table(name = "agents")
 public class Agent implements Serializable {
@@ -15,15 +15,19 @@ public class Agent implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	private String name;
-	private String lastName;
-	private String image;
-	private String email;
+
+
+	@OneToOne
+	@JoinColumn(name = "user_id")
+	@JsonBackReference
+	private UserEntity userEntity;
+
+
 
 	private boolean deleted=false;
 
 	public Agent() {
-		
+
 	}
 
 	public Long getId() {
@@ -34,38 +38,13 @@ public class Agent implements Serializable {
 		this.id = id;
 	}
 
-	public String getName() {
-		return name;
+	public UserEntity getUserEntity() {
+		return userEntity;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setUserEntity(UserEntity userEntity) {
+		this.userEntity = userEntity;
 	}
-
-	public String getLastName() {
-		return lastName;
-	}
-
-	public String getImage() {
-		return image;
-	}
-
-	public void setImage(String image) {
-		this.image = image;
-	}
-
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
 
 	public boolean isDeleted() {
 		return deleted;
