@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.innovamonitoring.models.entity.Agent;
 import com.innovamonitoring.models.services.IAgentService;
 import com.innovamonitoring.models.services.IUserService;
+import com.innovamonitoring.models.dto.AgentUserDTO; // Importa el DTO
+
 
 @CrossOrigin("*")
 @RestController
@@ -29,8 +31,14 @@ public class AgentController {
 	private IUserService userService;
 
 	@GetMapping("/agents")
-	public List<Agent> index() {
-		return agentService.findAll();
+	public ResponseEntity<List<AgentUserDTO>> index() {
+		try {
+			List<AgentUserDTO> agents = agentService.findAllAgentUserDTOs();
+			return new ResponseEntity<>(agents, HttpStatus.OK);
+		} catch (Exception e) {
+			// Manejo genérico de errores
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 
 	@PostMapping("/agents")

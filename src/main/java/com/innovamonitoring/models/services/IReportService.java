@@ -16,7 +16,11 @@ public interface IReportService {
 	public void delete (Long id);
 	
 	public Report findById(Long id);
-	
+
+	List<Report> findReportsByAgentAndPropertyId(Long agentId, Long propertyId);
+
+
 	public List<Report> findReportByPropertyId(Long id);
-	
+
+
 }

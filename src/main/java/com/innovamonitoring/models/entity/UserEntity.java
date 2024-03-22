@@ -47,7 +47,7 @@ public class UserEntity implements Serializable {
 	@JsonIgnoreProperties({"users"})
 	private Set<Property> properties = new HashSet<>();
 
-	@OneToOne(mappedBy = "userEntity", cascade = CascadeType.ALL, optional = false)
+	@OneToOne(mappedBy = "userEntity", cascade = CascadeType.ALL,  optional = false)
 	@JsonManagedReference
 	private Agent agent;
 	public Agent getAgent() {

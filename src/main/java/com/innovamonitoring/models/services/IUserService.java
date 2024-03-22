@@ -3,6 +3,7 @@ package com.innovamonitoring.models.services;
 import java.util.List;
 
 
+import com.innovamonitoring.models.entity.Report;
 import com.innovamonitoring.models.entity.UserEntity;
 
 public interface IUserService {
@@ -16,5 +17,8 @@ public interface IUserService {
 	public UserEntity findById (Long id);
 	
 	public UserEntity findByEmail(String email);
+
+
+	Long findAgentIdByUserId(Long userId);
 	
 }

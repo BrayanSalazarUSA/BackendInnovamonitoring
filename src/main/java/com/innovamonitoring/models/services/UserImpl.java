@@ -46,7 +46,14 @@ public class UserImpl implements IUserService{
 		return userDao.findByEmail(email);
 	}
 
-	
+	public Long findAgentIdByUserId(Long userId) {
+
+		UserEntity user = userDao.findById(userId).orElse(null);
+		if (user != null && user.getAgent() != null) {
+			return user.getAgent().getId();
+		}
+		return null;
+	}
 	
 	
 }

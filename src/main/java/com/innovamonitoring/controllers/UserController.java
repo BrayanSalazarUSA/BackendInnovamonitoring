@@ -81,6 +81,7 @@ public class UserController {
 					.collect(Collectors.toList());
 
 			UserLoginDTO userLoginDTO = new UserLoginDTO(
+					actualUser.getId(),
 					actualUser.getEmail(),
 					actualUser.getName(),
 					actualUser.getImage(),

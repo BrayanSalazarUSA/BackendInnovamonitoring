@@ -5,6 +5,7 @@ import java.util.List;
 public class UserLoginDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 
+    private Long id;
     private String email;
     private String name;
     private String image;
@@ -16,7 +17,8 @@ public class UserLoginDTO implements Serializable {
     }
 
     // Constructor con campos
-    public UserLoginDTO(String email, String name, String image, RoleDTO role, List<PropertyUserDTO> properties) {
+    public UserLoginDTO(Long id, String email, String name, String image, RoleDTO role, List<PropertyUserDTO> properties) {
+        this.id = id;
         this.email = email;
         this.name = name;
         this.image = image;
@@ -25,6 +27,14 @@ public class UserLoginDTO implements Serializable {
     }
 
     // Getters y setters
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public String getEmail() {
         return email;
     }

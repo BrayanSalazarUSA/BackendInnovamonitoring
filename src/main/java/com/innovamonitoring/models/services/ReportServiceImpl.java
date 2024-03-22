@@ -43,4 +43,9 @@ public class ReportServiceImpl implements IReportService {
 		return reportDao.fingByProperty(id);
 	}
 
+	@Override
+	public List<Report> findReportsByAgentAndPropertyId(Long agentId, Long propertyId) {
+
+		return reportDao.findReportsByAgentIdAndPropertyId(agentId, propertyId);
+	}
 }

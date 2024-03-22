@@ -2,6 +2,7 @@ package com.innovamonitoring.models.services;
 
 import java.util.List;
 
+import com.innovamonitoring.models.dto.AgentUserDTO;
 import com.innovamonitoring.models.entity.Agent;
 
 public interface IAgentService {
@@ -13,5 +14,6 @@ public interface IAgentService {
 	public Agent findById(Long id);
 	
 	public void deleteById(Long id);
-	
+	// Añadir el nuevo método
+	List<AgentUserDTO> findAllAgentUserDTOs();
 }

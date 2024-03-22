@@ -4,20 +4,15 @@ import java.util.HashMap;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
+import com.innovamonitoring.models.services.IUserService;
+import com.innovamonitoring.models.services.UserImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.innovamonitoring.models.entity.Report;
 
@@ -28,11 +23,17 @@ import com.innovamonitoring.models.services.IReportService;
 @RestController
 @RequestMapping("/api")
 public class ReportController {
-	
-	
+
+
 	@Autowired
+
 	private IReportService reportService;
-	
+	@Autowired
+	private IUserService userService;
+
+
+
+
 	@GetMapping("/reports")
 	public List<Report> index (){
 		return reportService.findAll();
@@ -41,30 +42,30 @@ public class ReportController {
 	public List<Report> index (@PathVariable Long id){
 		return reportService.findReportByPropertyId(id);
 	}
-	
-	
-	
+
+
+
 	@GetMapping("/reports/{id}")
 	public ResponseEntity<?> show (@PathVariable Long id){
-		
+
 		Report report = null;
-		
+
 		Map<String, Object> response = new HashMap<>();
-		
+
 		try {
 			report = reportService.findById(id);
-			
+
 		} catch (DataAccessException e) {
 			response.put("message", "Error when querying the database: ");
 			response.put("error",e.getMessage().concat(e.getMostSpecificCause().getMessage()));
 		}
-		
-	    if (report == null) {
-            response.put("message", "The report ID: ".concat(id.toString().concat(" does not exist in the database!")));
-            return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
-        }
 
-        return new ResponseEntity<Report>(report, HttpStatus.OK);
+		if (report == null) {
+			response.put("message", "The report ID: ".concat(id.toString().concat(" does not exist in the database!")));
+			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
+		}
+
+		return new ResponseEntity<Report>(report, HttpStatus.OK);
 	}
 
 	@PostMapping("/reports")
@@ -126,11 +127,38 @@ public class ReportController {
 			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-	
+
+	@GetMapping("/reports/property/{propertyId}/user/{userId}")
+	public ResponseEntity<?> getReportsByUserRoleAndProperty(
+			@PathVariable Long propertyId,
+			@PathVariable Long userId,
+			@RequestHeader("Role") String userRole) {
+
+		List<Report> reports;
+		if ("Monitor".equals(userRole)) {
+			Long agentId = userService.findAgentIdByUserId(userId);
+			reports = reportService.findReportsByAgentAndPropertyId(agentId, propertyId);
+		} else {
+			// Para Admin y Client, la lógica actual se mantiene
+			reports = reportService.findReportByPropertyId(propertyId);
+			if ("Client".equals(userRole)) {
+				reports = reports.stream().filter(Report::isVerified).collect(Collectors.toList());
+			}
+		}
+		if (reports.isEmpty()) {
+			// Si la consulta devuelve que no hay reportes asociados a esta propiedad la respuesta es  204
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		}
+		return new ResponseEntity<>(reports, HttpStatus.OK);
+	}
+
 	@DeleteMapping("reports/{id}")
 	public void delete(@PathVariable Long id) {
-		
+
 		reportService.delete(id);
-	} 
-	
+	}
+
 }
+
+
+

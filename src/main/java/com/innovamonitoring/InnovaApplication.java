@@ -13,6 +13,9 @@ import com.innovamonitoring.models.entity.Property;
 
 import com.innovamonitoring.models.services.IPropertyService;
 import com.innovamonitoring.models.services.IUserService;
+import org.springframework.context.annotation.Bean;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @SpringBootApplication()
 public class InnovaApplication {
@@ -21,6 +24,15 @@ public class InnovaApplication {
 		SpringApplication.run(InnovaApplication.class, args);
 	}
 
+	@Bean
+	public WebMvcConfigurer corsConfigurer() {
+		return new WebMvcConfigurer() {
+			@Override
+			public void addCorsMappings(CorsRegistry registry) {
+				registry.addMapping("/api/**").allowedOrigins("*").allowedHeaders("*");
+			}
+		};
+	}
 	
 	//ijbiñij
 	/*@Autowired
